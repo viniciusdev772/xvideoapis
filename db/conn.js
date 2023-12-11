@@ -1,15 +1,20 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize('nodemvc','nodemvc','nodemvc',{
-    host : 'localhost',
-    dialect : "mysql"
-})
+const sequelize = new Sequelize(
+  "railway",
+  "root",
+  "cb5cGFc1261F56HcEbE164GGg6EggDf2",
+  {
+    host: "monorail.proxy.rlwy.net",
+    dialect: "mysql",
+  }
+);
 
 try {
-    sequelize.authenticate()
-    console.log('conectado');
+  sequelize.authenticate();
+  console.log("conectado");
 } catch (error) {
-    console.log(error)
+  console.log(error);
 }
 
-module.exports = sequelize
+module.exports = sequelize;
