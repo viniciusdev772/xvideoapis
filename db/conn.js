@@ -6,6 +6,7 @@ const sequelize = new Sequelize(
   "cb5cGFc1261F56HcEbE164GGg6EggDf2",
   {
     host: "monorail.proxy.rlwy.net",
+    port: 44590,
     dialect: "mysql",
   }
 );
