@@ -1,0 +1,84 @@
+ <div id="responseAlert" class="hidden fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
+        <div id="responseContainer" class="bg-white p-8 rounded-lg shadow-lg max-w-sm transform scale-0">
+            <h2 class="text-2xl font-semibold text-center mb-4">Resposta do Servidor</h2>
+            <div id="responseContent" class="text-gray-600"></div>
+            <button id="closeAlert" class="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Fechar</button>
+        </div>
+    </div>
+<div class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
+        <div class="flex justify-center mb-6">
+            <span class="inline-block bg-gray-200 rounded-full p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
+            </span>
+        </div>
+        <h2 class="text-2xl font-semibold text-center mb-4">Crie uma nova conta ou Faça login</h2>
+        <p class="text-gray-600 text-center mb-6">Uma conta Vdev para acesso a todas as APIs Vdev</p>
+        <form>
+            <div class="mb-4">
+                <label for="fullName" class="block text-gray-700 text-sm font-semibold mb-2">Nome Completo *</label>
+                <input type="text" id="fullName" class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500" required placeholder="James Brown">
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Endereço de Email *</label>
+                <input type="email" id="email" class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500" required placeholder="hello@alignui.com">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-semibold mb-2">Senha *</label>
+                <input type="password" id="password" class="form-input w-full px-4 py-2 border rounded-lg text-gray-700 focus:ring-blue-500" required placeholder="••••••••">
+                <p class="text-gray-600 text-xs mt-1">Deve conter 1 letra maiúscula, 1 número, no mínimo 8 caracteres.</p>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Registrar
+                <span id="loadingSpinner" class="hidden animate-spin ml-2">&#9696;</span>
+            </button>
+            <p class="text-gray-600 text-xs text-center mt-2">Já tem uma conta? <a href="/usuario/login" class="text-blue-500 hover:underline">Faça login aqui</a>.</p>
+        </form>
+    </div>
+</div>
+<script>
+    $('form').submit(function (event) {
+        event.preventDefault();
+
+        $('#loginButton').prop('disabled', true);
+        $('#buttonText').addClass('hidden');
+        $('#loadingSpinner').removeClass('hidden');
+        var fullName = $('#fullName').val();
+        var email = $('#email').val();
+        var password = $('#password').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/usuario/create',
+            data: {
+                fullName: fullName,
+                email: email,
+                password: password
+            },
+            dataType: 'json',
+            success: function (response) {
+                $('#responseContent').html(response.message);
+                $('#responseAlert').removeClass('hidden');
+                $('#responseContainer').removeClass('scale-0');
+            },
+            error: function (error) {
+                console.error('Erro ao enviar dados:', error);
+            },
+            complete: function () {
+                $('#loginButton').prop('disabled', false);
+                $('#buttonText').removeClass('hidden');
+                $('#loadingSpinner').addClass('hidden');       
+            }
+        });
+    });
+
+    
+    $('#closeAlert').click(function () {
+                // Adicione animação de saída para a div de resposta
+        $('#responseContainer').addClass('scale-0');
+
+                // Oculta a div de resposta após a animação de saída
+        setTimeout(function () {
+            $('#responseAlert').addClass('hidden');
+        }, 300);
+    });
+</script>
