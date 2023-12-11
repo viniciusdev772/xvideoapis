@@ -1,7 +1,7 @@
 const express = require("express");
 const exphbs = require("express-handlebars");
 const app = express();
-const port = 3000  || process.env.PORT;
+const port = process.env.PORT || 3000;
 const conn = require("./db/conn");
 
 const cookieParser = require("cookie-parser");
@@ -17,7 +17,7 @@ const Users = require("./models/Users");
 const UsersRoutes = require("./routes/usersRoutes");
 const ApisRoutes = require("./routes/ApisRoutes");
 app.use("/usuario", UsersRoutes);
-app.use("/", verificarToken,ApisRoutes);
+app.use("/", verificarToken, ApisRoutes);
 const hbs = exphbs.create({});
 
 app.engine("handlebars", hbs.engine);
