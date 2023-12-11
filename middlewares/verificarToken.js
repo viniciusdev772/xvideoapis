@@ -22,10 +22,11 @@ const verificarToken = (req, res, next) => {
         res
           .status(401)
           .sendFile(path.join(__dirname, "../public/html/tokenerrado.html"));
+      } else {
+        next();
       }
-      
+
       console.log("Autenticado com token ", token);
-      next();
     }
   );
 };
