@@ -15,8 +15,8 @@ function decodificarToken(token) {
 }
 
 module.exports = class API {
-  static APICriar(req, res) {
-    const { data } = req.body;
+  static async APICriar(req, res) {
+    const { data } = req.body; // Obtendo o serviço da requisição
     const tokenCookie = req.cookies.token;
 
     if (tokenCookie) {
@@ -25,23 +25,39 @@ module.exports = class API {
       if (decodedData) {
         const userEmail = decodedData.userEmail;
 
-        // Aqui você pode usar o modelo APIModel para criar um novo registro
-        APIModel.create({
-          email: userEmail,
-          service: data,
-        })
-          .then((novoRegistro) => {
+        try {
+          // Verificar se já existe uma API do mesmo serviço relacionada ao email
+          const apiExistente = await APIModel.findOne({
+            where: {
+              email: userEmail,
+              service: data,
+            },
+          });
+
+          if (apiExistente) {
+            // Se já existe, retornar um erro ou outra resposta apropriada
+            res.status(200).json({
+              api: "Falha,Já existe uma API para este serviço e e-mail.",
+            });
+          } else {
+            const novoRegistro = await APIModel.create({
+              email: userEmail,
+              service: data,
+            });
+
             const respostaRegistro = novoRegistro.toJSON();
             console.log("Novo registro criado:", respostaRegistro);
             const apiFieldValue = respostaRegistro.api;
 
             // Retornando o valor sem as aspas
             res.status(201).json({ api: apiFieldValue.replace(/^"|"$/g, "") });
-          })
-          .catch((error) => {
-            console.error("Erro ao criar novo registro:", error.message);
-            res.status(500).json({ mensagem: "Erro interno do servidor" });
-          });
+          }
+
+          // Se não existe, criar a nova API
+        } catch (error) {
+          console.error("Erro ao criar ou verificar API:", error.message);
+          res.status(500).json({ mensagem: "Erro interno do servidor" });
+        }
       } else {
         console.log("Erro ao decodificar o token.");
         res.status(401).json({ mensagem: "Token inválido" });

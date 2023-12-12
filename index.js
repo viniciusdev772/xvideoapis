@@ -16,13 +16,17 @@ app.use(express.static("public"));
 const Users = require("./models/Users");
 const UsersRoutes = require("./routes/usersRoutes");
 const ApisRoutes = require("./routes/ApisRoutes");
+const Xvideos = require("./routes/xvideos_router");
 app.use("/usuario", UsersRoutes);
 app.use("/api", ApisRoutes);
+app.use("/xvideos", Xvideos);
 app.use("/", verificarToken, ApisRoutes);
 const hbs = exphbs.create({});
 
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
+
+const { XVDL } = require("./xvdl/index");
 
 conn
   .sync()
