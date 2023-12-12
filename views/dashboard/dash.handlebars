@@ -1,28 +1,120 @@
-<body class="bg-gray-100 font-sans">
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Loopple/loopple-public-assets@main/riva-dashboard-tailwind/riva-dashboard.css" rel="stylesheet">
+    </head>
+    <body class="bg-white">    
+        <div class="container flex flex-col mx-auto bg-white">
+            <aside class="group/sidebar flex flex-col shrink-0 lg:w-[300px] w-[250px] transition-all duration-300 ease-in-out m-0 fixed z-40 inset-y-0 left-0 bg-white border-r border-r-dashed border-r-neutral-200 sidenav fixed-start loopple-fixed-start" id="sidenav-main"><div class="flex shrink-0 px-8 items-center justify-between h-[96px]">
+            <h1>Painel de APIS</h1>
+        </div>
 
-<div class="flex h-screen bg-gray-200">
-    <div class="m-auto">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
-            <div class="flex justify-center mb-6">
-                <span class="inline-block bg-gray-200 rounded-full p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
+        <div class="hidden border-b border-dashed lg:block dark:border-neutral-700/70 border-neutral-200"></div>
+
+        <div class="relative pl-3 my-5 overflow-y-scroll">
+            <div class="flex flex-col w-full font-medium">
+
+            <!-- menu item -->
+            <div>
+                <h1>Apis Disponiveis para você</h1>
+                <span class="select-none flex items-center px-4 py-[.775rem] cursor-pointer my-[.4rem] rounded-[.95rem]">
+                <a  id="apiXvideos" class="flex items-center flex-grow text-[1.15rem] dark:text-neutral-400/75 text-stone-500 hover:text-dark">APi Xvideos</a>
                 </span>
             </div>
-            <h2 class="text-2xl font-semibold text-center mb-4">Crie uma nova conta ou Faça login</h2>
-            <p class="text-gray-600 text-center mb-6">Uma conta Vdev para acesso a todas as APIs Vdev</p>
-            <form>
-                <!-- Seu formulário aqui -->
-            </form>
+              <div>
+                <span class="select-none flex items-center px-4 py-[.775rem] cursor-pointer my-[.4rem] rounded-[.95rem]">
+                <a   class="flex items-center flex-grow text-[1.15rem] dark:text-neutral-400/75 text-stone-500 hover:text-dark">Api de consulta ou obter IP</a>
+                </span>
+            </div>
+
+
+            <!-- menu item -->
+
+            
+         
+
+            </div>
+            </div>
+        </aside>
         </div>
-        <div class="mt-4">
-            <!-- Dashboard Cards ou Gráficos aqui -->
-            <!-- Exemplo: -->
-            <div class="bg-white p-4 rounded-lg shadow-lg mb-4">
-                <h3 class="text-xl font-semibold mb-2">Resumo do Usuário</h3>
-                <p class="text-gray-600">Nome: [Nome do usuário]</p>
-                <p class="text-gray-600">E-mail: [E-mail do usuário]</p>
-                <!-- Adicione mais informações conforme necessário -->
+        <div class="flex flex-wrap ml-9 my-5">
+            <div class="w-full max-w-full sm:w-1/4 mx-auto text-center">
+           
+
+         <table class="min-w-full bg-white border border-gray-300">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="py-2 px-4 border-b">API Key</th>
+      <th class="py-2 px-4 border-b">Serviço</th>
+      <th class="py-2 px-4 border-b">Queries Restantes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each registros}}
+      <tr class="border-b">
+        <td class="py-2 px-4">{{this.api}}</td>
+        <td class="py-2 px-4">{{this.service}}</td>
+        <td class="py-2 px-4">{{this.query}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+
+
+
+               
             </div>
         </div>
-    </div>
-</div>
+      <script>
+
+       document.getElementById('apiXvideos').addEventListener('click', function () {
+    Swal.fire({
+        title: 'Criando uma APi para o Xvideos, você terá como limite inicial de 100 query por mês, para aumento consulte o admin',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Não'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            submitXvideosAPIRequest();
+        }
+    });
+});
+
+function submitXvideosAPIRequest() {
+    // Faça a requisição da API Xvideos
+    fetch('/api/create/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: 'xvideos' }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return response.json();
+    })
+    .then(result => {
+        // Exibe a resposta da API Xvideos
+        Swal.fire({
+            title: 'Api Gerada',
+            text: result.api,
+            icon: 'success'
+        });
+    })
+    .catch(error => {
+        // Trata erros na requisição
+        Swal.fire({
+            title: 'Erro na requisição da API Xvideos',
+            text: error.message,
+            icon: 'error'
+        });
+    });
+}
+
+    </script>
+    </body>
+<html>

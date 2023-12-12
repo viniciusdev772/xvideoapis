@@ -17,6 +17,7 @@ const Users = require("./models/Users");
 const UsersRoutes = require("./routes/usersRoutes");
 const ApisRoutes = require("./routes/ApisRoutes");
 app.use("/usuario", UsersRoutes);
+app.use("/api", ApisRoutes);
 app.use("/", verificarToken, ApisRoutes);
 const hbs = exphbs.create({});
 
