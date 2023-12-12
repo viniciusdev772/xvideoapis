@@ -42,18 +42,13 @@ module.exports = class XvideoApi {
       });
 
       if (apiValida) {
-        const valorQuery = apiValida.query;
-        const serv = apiValida.service;
-        console.log(valorQuery);
       }
 
       if (!apiValida) {
-        return res
-          .status(401)
-          .json({
-            error:
-              "Erro, Chave de Api Inexistente, Verifique no seu Painel se ela pertence a rota /xvideos a qual você está tentando acessar",
-          });
+        return res.status(401).json({
+          error:
+            "Erro, Chave de Api Inexistente, Verifique no seu Painel se ela pertence a rota /xvideos a qual você está tentando acessar",
+        });
       }
       const linkVideo = req.query.link;
       const targetLink = req.query.link;
@@ -61,6 +56,9 @@ module.exports = class XvideoApi {
         return res.status(400).json({ error: "Link do vídeo ausente" });
       }
       if (apiValida) {
+        const valorQuery = apiValida.query;
+        const serv = apiValida.service;
+        console.log(valorQuery);
         if (valorQuery !== undefined && valorQuery <= 0) {
           return res.status(429).json({
             error:
