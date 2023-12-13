@@ -1,4 +1,5 @@
 const APIModel = require("../models/Api");
+const XvideoHistory = require("../models/XvideosHistory");
 const verificarSenha = require("../middlewares/verificarSenha");
 const gerarHashSenha = require("../middlewares/gerarSenha");
 const jwt = require("jsonwebtoken");
@@ -25,6 +26,29 @@ function checkXvideosUrl(url) {
 // Classe XvideoApi para manipulação de vídeos
 module.exports = class XvideoApi {
   // Método para manipular requisições GET
+
+  static async history(req, res) {
+    const chaveApi = req.query.apiKey;
+
+    if (!chaveApi) {
+      return res.status(400).json({ error: "Chave de API ausente" });
+    }
+
+    const historyData = await XvideoHistory.findAll({
+      where: {
+        api: chaveApi,
+      },
+    });
+    if (!historyData || historyData.length === 0) {
+      return res.status(404).json({
+        error: "Tenha Certeza que essa Api é do serviço Xvideos.",
+      });
+    }
+
+    // Retorna os dados encontrados
+    return res.status(200).json(historyData);
+  }
+
   static async videoget(req, res) {
     try {
       // Verificar se a chave de API foi fornecida
@@ -68,6 +92,10 @@ module.exports = class XvideoApi {
           await APIModel.decrement("query", {
             by: 1,
             where: { api: chaveApi },
+          });
+          await XvideoHistory.create({
+            api: chaveApi,
+            url: targetLink,
           });
           XVDL.getInfo(targetLink).then((inf) => {
             const jsonResponse = {

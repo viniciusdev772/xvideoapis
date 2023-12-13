@@ -36,6 +36,7 @@
                     <th class="py-2 px-4 border-b">API Key</th>
                     <th class="py-2 px-4 border-b">Serviço</th>
                     <th class="py-2 px-4 border-b">Queries Restantes</th>
+                    <th class="py-2 px-4 border-b">Histórico de Request</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +45,7 @@
                         <td class="py-2 px-4">{{this.api}}</td>
                         <td class="py-2 px-4">{{this.service}}</td>
                         <td class="py-2 px-4">{{this.query}}</td>
+                        <td class="py-2 px-4"><a href="javascript:void(0);" onclick="abrirDialog('{{this.api}}')">Ver Histórico de Acesso </a></td> 
                     </tr>
                 {{/each}}
             </tbody>
@@ -53,6 +55,44 @@
     </div>
 
     <script>
+       function abrirDialog(apiKey) {
+    // Requisição à rota /xvideos/history passando a chave apiKey via GET
+    fetch(`/xvideos/history?apiKey=${apiKey}`)
+        .then(response => response.json())
+        .then(apiResponse => {
+            // Verifica se a resposta da API é um array válido
+            if (Array.isArray(apiResponse) && apiResponse.length > 0) {
+                // Formatação dos dados da resposta para exibição no diálogo
+                const dadosFormatados = apiResponse.map(item => {
+                    return `API: ${item.api}<br>URL: ${item.url}<br>`;
+                }).join('<br><br>');
+
+                // Use SweetAlert2 para exibir os dados obtidos no diálogo
+                Swal.fire({
+                    title: 'Dados Obtidos',
+                    html: dadosFormatados,
+                    icon: 'info',
+                    confirmButtonText: 'Fechar'
+                });
+            } else {
+                
+
+                    Swal.fire(
+                    'Erro na Requisição',
+                    apiResponse.error,
+                    'error'
+                    )
+
+                console.error('Resposta inválida da API:', apiResponse);
+                
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+            // Tratar o erro de acordo com os requisitos do seu aplicativo
+            // Pode ser exibindo uma mensagem de erro ou realizando outra ação necessária
+        });
+}
         document.getElementById('apiXvideos').addEventListener('click', function () {
             Swal.fire({
                 title: 'Criando uma APi para o Xvideos, você terá como limite inicial de 100 query por mês, para aumento consulte o admin',
