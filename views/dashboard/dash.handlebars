@@ -24,6 +24,11 @@
                             <a class="flex items-center flex-grow text-[1.15rem] dark:text-neutral-400/75 text-stone-500 hover:text-dark">Api de consulta ou obter IP</a>
                         </span>
                     </div>
+                     <div>
+                        <span class="select-none flex items-center px-4 py-[.775rem] cursor-pointer my-[.4rem] rounded-[.95rem]">
+                            <a href="./api.html" class="flex items-center flex-grow text-[1.15rem] dark:text-neutral-400/75 text-stone-500 hover:text-dark">Ver Documentações</a>
+                        </span>
+                    </div>
                     <!-- menu item -->
                 </div>
             </div>
@@ -125,9 +130,9 @@
             .then(result => {
                 // Exibe a resposta da API Xvideos
                 Swal.fire({
-                    title: 'Api Gerada',
+                    title: 'Aviso',
                     text: result.api,
-                    icon: 'success'
+                    
                 });
             })
             .catch(error => {

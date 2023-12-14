@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API USAGE</title>
+    <!-- Inclua o link para o arquivo CSS do Tailwind -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Inclua o link para o arquivo CSS do sweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Conteúdo Principal -->
+    <div class="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-lg">
+
+        <h2 class="text-3xl font-bold mb-4 text-blue-500">API USAGE</h2>
+
+        <!-- Documentação da API -->
+        <div class="mt-4">
+
+            <!-- Endpoint 1 -->
+            <div class="bg-gray-200 p-4 rounded-lg mb-4">
+                <h3 class="text-xl font-bold mb-2">Endpoint 1: /xvideos</h3>
+                <p class="text-gray-700">
+                    Para usar esse Endpoint, somente solicitação do tipo GET é aceita. Inclua na sua requisição os
+                    parâmetros 'apiKey' e 'link'.
+                    O parâmetro 'link' representa o link para o vídeo do xvideos, e 'apiKey' é sua autorização de uso da
+                    API.
+                </p>
+                <p class="text-gray-700">
+                    Exemplo de Requisição:
+                    <code class="bg-gray-300 p-1 rounded-md" id="example1"></code>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded-full ml-2"
+                        onclick="showExampleDialog('Java', '/xvideos')">Java (OkHttp3)</button>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded-full ml-2"
+                        onclick="showExampleDialog('Axios', '/xvideos')">Axios</button>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded-full ml-2"
+                        onclick="showExampleDialog('Python', '/xvideos')">Python (requests)</button>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded-full ml-2"
+                        onclick="showExampleDialog('NodeJS', '/xvideos')">Node.js (axios)</button>
+                </p>
+            </div>
+
+            <!-- Endpoint 2 -->
+            <div class="bg-gray-200 p-4 rounded-lg mb-4">
+                <h3 class="text-xl font-bold mb-2">Endpoint 2: /ip</h3>
+                <p class="text-gray-700">
+                    Este endpoint permite obter o seu próprio IP ou consultar o IP de outra pessoa.
+                </p>
+                <p class="text-gray-700">
+                    Exemplo de Requisição:
+                    <code class="bg-gray-300 p-1 rounded-md" id="example2"></code>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded-full ml-2"
+                        onclick="showExampleDialog('Java', '/ip')">Java (OkHttp3)</button>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded-full ml-2"
+                        onclick="showExampleDialog('Axios', '/ip')">Axios</button>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded-full ml-2"
+                        onclick="showExampleDialog('Python', '/ip')">Python (requests)</button>
+                    <button class="bg-blue-500 text-white px-2 py-1 rounded-full ml-2"
+                        onclick="showExampleDialog('NodeJS', '/ip')">Node.js (axios)</button>
+                </p>
+            </div>
+
+            <!-- Exibir link atual da página sem o nome do arquivo -->
+            <div class="bg-gray-200 p-4 rounded-lg">
+                <h3 class="text-xl font-bold mb-2">Link Atual:</h3>
+                <p class="text-blue-500 font-semibold break-all" id="currentLink"></p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Inclua o link para o arquivo JS do sweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Obter o link atual da página sem o nome do arquivo
+        const currentLink = window.location.origin;
+
+        // Atualizar o texto com o link atual da página sem o nome do arquivo
+        document.getElementById('currentLink').innerText = currentLink;
+
+        // Substituir {currentLink} nos exemplos de API
+        document.getElementById('example1').innerText = `GET ${currentLink}/xvideos?apiKey=SuaChaveAqui&link=https://www.xvideos.com/seu-video`;
+        document.getElementById('example2').innerText = `GET ${currentLink}/ip?apiKey=SuaChaveAqui&ip=192.168.1.1`;
+
+        // Função para exibir o diálogo com exemplos de requisição
+        function showExampleDialog(language, endpoint) {
+            let exampleText = '';
+            let responseProcessing = '';
+
+            if (language === 'Java') {
+                exampleText = `OkHttpClient client = new OkHttpClient();
+Request request = new Request.Builder()
+  .url("${currentLink}${endpoint}?apiKey=SuaChaveAqui&link=https://www.xvideos.com/seu-video")
+  .get()
+  .build();`;
+                responseProcessing = `// Processamento de resposta em Java (OkHttp3)
+Response response = client.newCall(request).execute();
+if (response.isSuccessful()) {
+  // Código de sucesso (response.code() == 200)
+  String responseBody = response.body().string();
+  // Faça algo com o responseBody
+} else {
+  // Código de erro (response.code() == 401)
+  // Lidar com o erro
+}`;
+            } else if (language === 'Axios') {
+                exampleText = `axios.get("${currentLink}${endpoint}", {
+  params: {
+    apiKey: "SuaChaveAqui",
+    link: "https://www.xvideos.com/seu-video"
+  }
+});`;
+                responseProcessing = `// Processamento de resposta em JavaScript (Axios)
+axios.get("${currentLink}${endpoint}", {
+  params: {
+    apiKey: "SuaChaveAqui",
+    link: "https://www.xvideos.com/seu-video"
+  }
+})
+  .then(response => {
+    // Código de sucesso (response.status == 200)
+    // Faça algo com response.data
+  })
+  .catch(error => {
+    // Código de erro (error.response.status == 401)
+    // Lidar com o erro
+  });`;
+            } else if (language === 'Python') {
+                exampleText = `import requests
+
+url = "${currentLink}${endpoint}"
+params = {"apiKey": "SuaChaveAqui", "link": "https://www.xvideos.com/seu-video"}
+response = requests.get(url, params=params)`;
+                responseProcessing = `# Processamento de resposta em Python (requests)
+if response.status_code == 200:
+    # Código de sucesso
+    response_data = response.text
+    # Faça algo com response_data
+else {
+    # Código de erro (response.status_code == 401)
+    # Lidar com o erro
+}`;
+            } else if (language === 'NodeJS') {
+                exampleText = `const axios = require('axios');
+
+axios.get("${currentLink}${endpoint}", {
+  params: {
+    apiKey: "SuaChaveAqui",
+    link: "https://www.xvideos.com/seu-video"
+  }
+});`;
+                responseProcessing = `// Processamento de resposta em Node.js (Axios)
+axios.get("${currentLink}${endpoint}", {
+  params: {
+    apiKey: "SuaChaveAqui",
+    link: "https://www.xvideos.com/seu-video"
+  }
+})
+  .then(response => {
+    // Código de sucesso (response.status == 200)
+    // Faça algo com response.data
+  })
+  .catch(error => {
+    // Código de erro (error.response.status == 401)
+    // Lidar com o erro
+  });`;
+            }
+
+            Swal.fire({
+                title: `Exemplo de Requisição e Processamento de Resposta em ${language}`,
+                html: `<pre>${exampleText}</pre><br><pre>${responseProcessing}</pre>`,
+                icon: 'info',
+                confirmButtonText: 'Fechar'
+            });
+        }
+    </script>
+
+</body>
+
+</html>
