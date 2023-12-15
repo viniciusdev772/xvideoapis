@@ -44,7 +44,6 @@ module.exports = class XvideoApi {
         error: "Tenha Certeza que essa Api é do serviço Xvideos.",
       });
     }
-
     // Retorna os dados encontrados
     return res.status(200).json(historyData);
   }
