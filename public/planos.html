@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços de API</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <header class="text-center p-6 bg-blue-600 text-white">
+        <h1 class="text-4xl font-bold">Explore Nossos Planos de API</h1>
+    </header>
+
+    <section class="container mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Plano Free -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-2 text-center">Plano Free</h2>
+            <p class="mb-4 text-center">Limitado a 1 chave de API por serviço, com 100 queries por mês.</p>
+            <ul class="mb-4">
+                <li class="mb-2">API para download de vídeos(Xvideos)</li>
+                <li>API para consulta de IP</li>
+            </ul>
+            <button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled">Plano
+                Atual</button>
+        </div>
+
+        <!-- Plano Pago -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-2 text-center">Plano Pago</h2>
+            <p class="mb-4 text-center">1 chave por serviço, 1,000 queries por mês, por apenas R$ 25,90 mensais.</p>
+            <ul class="mb-4">
+                <li class="mb-2">API para download de vídeos(Xvideos)</li>
+                <li>API para consulta de IP</li>
+            </ul>
+            <button class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Assine
+                Agora</button>
+        </div>
+    </section>
+</body>
+
+</html>

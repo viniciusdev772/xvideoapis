@@ -3,10 +3,26 @@ const XvideoHistory = require("../models/XvideosHistory");
 const verificarSenha = require("../middlewares/verificarSenha");
 const gerarHashSenha = require("../middlewares/gerarSenha");
 const jwt = require("jsonwebtoken");
+const cron = require("node-cron");
 
 const { XVDL } = require("../xvdl");
 
 const serviceId = "xvideos";
+
+cron.schedule("0 0 15 * *", async () => {
+  try {
+    // Atualize todas as linhas da tabela, definindo a coluna 'query' para 100
+    await APIModel.update({ query: 100 }, { where: {} });
+
+    console.log(
+      'A coluna "query" foi atualizada para 100 em todas as linhas com sucesso!'
+    );
+  } catch (error) {
+    console.error('Ocorreu um erro ao atualizar a coluna "query":', error);
+  }
+});
+
+console.log("Cron job agendado para rodar no dia 15 de cada mês.");
 
 function checkXvideosUrl(url) {
   const lowercaseUrl = url.toLowerCase();
