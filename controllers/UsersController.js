@@ -16,7 +16,7 @@ module.exports = class Users {
 
     gerarHashSenha(password, (erro, hash) => {
       if (erro) {
-        res.send({ message: "Erro ao criar usuário." });
+        res.send({ message: "Erro ao criar usuário.", sucesso: false });
         return;
       }
 
@@ -32,6 +32,7 @@ module.exports = class Users {
           if (usuarioExistente) {
             res.send({
               message: "Conflito ao criar este usuário, talvez ele já exista.",
+              sucesso: false,
             });
           } else {
             UsersModel.create(novoUsuario)
@@ -39,6 +40,7 @@ module.exports = class Users {
                 res.send({
                   message:
                     "Usuário Criado com Sucesso, agora você tem acesso ao Dashboard.",
+                  sucesso: true,
                 });
                 console.log("Novo usuário criado:", usuarioCriado.get());
               })
@@ -50,7 +52,10 @@ module.exports = class Users {
         })
         .catch((erro) => {
           console.error("Erro ao verificar usuário existente:", erro);
-          res.send({ message: "Erro ao verificar usuário existente." });
+          res.send({
+            message: "Erro ao verificar usuário existente.",
+            sucesso: false,
+          });
         });
     });
   }
@@ -60,13 +65,17 @@ module.exports = class Users {
     UsersModel.findOne({ where: { email: email } })
       .then((usuario) => {
         if (!usuario) {
-          res.send({ message: "Usuário não encontrado." });
+          res.send({ message: "Usuário não encontrado.", sucesso: false });
           return;
         }
 
         verificarSenha(password, usuario.password, (erro, match) => {
           if (erro || !match) {
-            res.send({ message: "Credenciais inválidas.", password });
+            res.send({
+              message: "Credenciais inválidas.",
+              password,
+              sucesso: false,
+            });
             return;
           }
 
@@ -91,12 +100,13 @@ module.exports = class Users {
           res.send({
             message: "Login bem-sucedido.",
             token: token,
+            sucesso: true,
           });
         });
       })
       .catch((erro) => {
         console.error("Erro ao realizar o login:", erro);
-        res.send({ message: "Erro ao realizar o login." });
+        res.send({ message: "Erro ao realizar o login.", sucesso: false });
       });
   }
 };
