@@ -88,4 +88,26 @@ module.exports = class API {
       res.status(500).json({ mensagem: "Erro interno do servidor" });
     }
   }
+
+  //retornar em json os registros
+  static async dashboardJson(req, res) {
+    const tokenCookie = req.body.token;
+    const decodedData = decodificarToken(tokenCookie);
+    const userEmail = decodedData.userEmail;
+
+    try {
+      // Consultar o banco de dados para registros relacionados ao email
+      const registrosRelacionados = await APIModel.findAll({
+        where: {
+          email: userEmail,
+        },
+        raw: true,
+      });
+
+      res.json(registrosRelacionados);
+    } catch (error) {
+      console.error("Erro ao consultar o banco de dados:", error.message);
+      res.status(500).json({ mensagem: "Erro interno do servidor" });
+    }
+  }
 };
