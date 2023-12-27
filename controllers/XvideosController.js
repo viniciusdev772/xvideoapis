@@ -8,7 +8,7 @@ const cron = require("node-cron");
 const { XVDL } = require("../xvdl");
 
 const serviceId = "xvideos";
-
+/*
 cron.schedule("0 0 15 * *", async () => {
   try {
     // Atualize todas as linhas da tabela, definindo a coluna 'query' para 100
@@ -21,6 +21,7 @@ cron.schedule("0 0 15 * *", async () => {
     console.error('Ocorreu um erro ao atualizar a coluna "query":', error);
   }
 });
+*/
 
 console.log("Cron job agendado para rodar no dia 15 de cada mês.");
 
