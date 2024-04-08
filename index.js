@@ -1,9 +1,9 @@
 const express = require("express");
 const exphbs = require("express-handlebars");
 const app = express();
-const cors = require('cors');
+const cors = require("cors");
 app.use(cors());
-const port = process.env.PORT || 3000;
+const port = 3090;
 const conn = require("./db/conn");
 
 const cookieParser = require("cookie-parser");

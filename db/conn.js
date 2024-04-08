@@ -1,13 +1,13 @@
 const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(
-  "railway",
-  "root",
-  "cb5cGFc1261F56HcEbE164GGg6EggDf2",
+  "vdev_hosts", // nome do banco de dados
+  "vdev_hosts", // nome de usuário
+  "vdev_hosts", // senha
   {
-    host: "monorail.proxy.rlwy.net",
-    port: 44590,
-    dialect: "mysql",
+    host: "localhost", // host local
+    dialect: "mysql", // dialeto MySQL
+    timezone: "-03:00", // fuso horário
   }
 );
 
