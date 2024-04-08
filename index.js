@@ -33,7 +33,7 @@ const { XVDL } = require("./xvdl/index");
 conn
   .sync()
   .then(() => {
-    app.listen(port, "0.0.0.0", () =>
+    app.listen(port, () =>
       console.log(`MVC RUNS ON PORT: http://localhost:${port}`)
     );
   })
