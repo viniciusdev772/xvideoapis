@@ -113,16 +113,38 @@ module.exports = class XvideoApi {
             api: chaveApi,
             url: targetLink,
           });
-          XVDL.getInfo(targetLink).then((inf) => {
-            const jsonResponse = {
-              statusCode: 200,
-              status: "sucesso",
-              thumb: inf.thumbnail,
-              titulo: inf.title,
-              link: inf.streams.hq,
-            };
-            res.json(jsonResponse);
-          });
+          XVDL.getInfo(targetLink)
+            .then((inf) => {
+              if (
+                !inf.thumbnail ||
+                !inf.title ||
+                !inf.streams ||
+                !inf.streams.hq
+              ) {
+                throw new Error(
+                  "Algumas informações necessárias estão ausentes"
+                );
+              }
+
+              const jsonResponse = {
+                statusCode: 200,
+                status: "sucesso",
+                thumb: inf.thumbnail,
+                titulo: inf.title,
+                link: inf.streams.hq,
+              };
+              res.json(jsonResponse);
+            })
+            .catch((error) => {
+              console.error("Erro ao processar informações:", error);
+              res
+                .status(500)
+                .json({
+                  statusCode: 500,
+                  status: "erro",
+                  message: "Erro ao processar informações",
+                });
+            });
         }
       } else {
         return res.status(404).json({
