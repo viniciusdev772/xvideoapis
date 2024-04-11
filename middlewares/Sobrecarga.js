@@ -20,4 +20,4 @@ function verificaSobrecarga(req, res, next) {
   next();
 }
 
-export default verificaSobrecarga;
+module.exports = verificaSobrecarga;
