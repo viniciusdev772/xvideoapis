@@ -17,7 +17,7 @@ const Api = db.define("api", {
   },
   query: {
     type: DataTypes.INTEGER,
-    defaultValue: 100,
+    defaultValue: 20000,
     allowNull: false,
   },
 });
