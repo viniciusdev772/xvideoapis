@@ -1,4 +1,7 @@
 function verificaSobrecarga(req, res, next) {
+  const RATE_LIMIT_INTERVAL = 60000; // 60 segundos
+  const MAX_REQUESTS_PER_INTERVAL = 1000; // 1000 solicitações por intervalo de 60 segundos
+
   let ip = req.headers["cf-connecting-ip"] || req.ip; // Usa o IP original do cliente se disponível
   const currentTime = Date.now();
   let count = requestCount.get(ip) || { timestamp: currentTime, count: 0 };
