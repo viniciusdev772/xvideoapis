@@ -1,3 +1,5 @@
+const requestCount = new Map(); // Esta é a estrutura de dados para armazenar o contador de solicitações por IP
+
 function verificaSobrecarga(req, res, next) {
   const RATE_LIMIT_INTERVAL = 60000; // 60 segundos
   const MAX_REQUESTS_PER_INTERVAL = 1000; // 1000 solicitações por intervalo de 60 segundos
