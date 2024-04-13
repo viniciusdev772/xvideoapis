@@ -55,8 +55,21 @@
 <script>
     $(document).ready(function () {
 
-        const token = "webtoken_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        function generateToken(length) {
+        let token = "webtoken_";
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
+        // Calcula o número de caracteres aleatórios a serem gerados
+        const randomLength = length - token.length;
+
+        for (let i = 0; i < randomLength; i++) {
+            token += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+
+        return token;
+        }
+
+        const token = generateToken(100);
         document.getElementById("btnlink").onclick = function () {
             $.ajax({
                 type: 'POST',
@@ -84,6 +97,8 @@
         if (urlToken !== '') {
             // Se o parâmetro 'token' estiver presente, chame a função ResolveToken com esse token
             ResolveToken(urlToken);
+            var newUrl = location.protocol + '//' + location.host + location.pathname;
+            history.replaceState({}, document.title, newUrl);
         }
 
         function ResolveToken(token){
