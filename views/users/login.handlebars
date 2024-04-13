@@ -55,7 +55,7 @@
 <script>
     $(document).ready(function () {
 
-        const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const token = "webtoken_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
         document.getElementById("btnlink").onclick = function () {
             $.ajax({
@@ -67,26 +67,27 @@
                 },
                 dataType: 'json',
                 success: function (response) {
-                    sendDataToRemote();
+                   
                     window.open(response.site, "_blank");
                 },
             });
         };
 
-        // Função para enviar dados ao servidor e verificar token
-        function sendDataToRemote() {
-            var progressCounter = 0; // Contador de progresso
-            var progressInterval = setInterval(function() {
-                // Atualizar progresso na tela
-                $('#responseContent').html('Verificando token... Progresso: ' + progressCounter + '%');
-                progressCounter += 10; // Incrementar progresso em 10% a cada 5 segundos
+         function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        };
 
-                // Bloquear outros botões durante a verificação
-                $('#loginButton').prop('disabled', true);
-                $('#btnlink').prop('disabled', true);
+         var urlToken = getUrlParameter('token');
+        if (urlToken !== '') {
+            // Se o parâmetro 'token' estiver presente, chame a função ResolveToken com esse token
+            ResolveToken(urlToken);
+        }
 
-                // Enviar requisição para verificar token
-                $.ajax({
+        function ResolveToken(token){
+            $.ajax({
                     type: 'POST',
                     url: 'https://cdn.viniciusdev.com.br/consultar_token',
                     data: {
@@ -126,9 +127,10 @@
                       
                     },
                 });
-            }, 5000);
         }
 
+        // Função para enviar dados ao servidor e verificar token
+        
         // Lidar com o envio do formulário de login
         $('#loginForm').submit(function (event) {
             event.preventDefault();
