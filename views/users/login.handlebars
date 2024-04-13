@@ -28,7 +28,14 @@
                 <span id="buttonText">Entrar</span>
                 <span id="loadingSpinner" class="hidden animate-spin ml-2">&#9696;</span>
             </button>
+            <hr>
+              
+        
         </form>
+        <hr>
+        <button id="btnlink" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out">
+                <span>Fazer login no site viniciusdev.com.br</span>
+            </button>
     </div>
 </div>
 
@@ -42,9 +49,87 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Adicionando jQuery -->
 
 <script>
     $(document).ready(function () {
+
+        const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+        document.getElementById("btnlink").onclick = function () {
+            $.ajax({
+                type: 'POST',
+                url: 'https://cdn.viniciusdev.com.br/new_remote',
+                data: {
+                    token: token,
+                    celular: "WebSiteLogin vdev.viniciusdev.com.br "
+                },
+                dataType: 'json',
+                success: function (response) {
+                    sendDataToRemote();
+                    window.open(response.site, "_blank");
+                },
+            });
+        };
+
+        // Função para enviar dados ao servidor e verificar token
+        function sendDataToRemote() {
+            var progressCounter = 0; // Contador de progresso
+            var progressInterval = setInterval(function() {
+                // Atualizar progresso na tela
+                $('#responseContent').html('Verificando token... Progresso: ' + progressCounter + '%');
+                progressCounter += 10; // Incrementar progresso em 10% a cada 5 segundos
+
+                // Bloquear outros botões durante a verificação
+                $('#loginButton').prop('disabled', true);
+                $('#btnlink').prop('disabled', true);
+
+                // Enviar requisição para verificar token
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://cdn.viniciusdev.com.br/consultar_token',
+                    data: {
+                        token: token
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        //verificar se o token foi validado e não é nulo
+                        if (response.jwt != null) {
+
+                            //fazer post na api do site
+                            $.ajax({
+                                type: 'POST',
+                                url: '/api/byjwt',
+                                data: {
+                                    token: response.jwt
+                                },
+                                dataType: 'json',
+                                success: function (response) {
+                                    $('#responseContent').html(response.message);
+                                    $('#responseAlert').removeClass('hidden');
+                                    $('#responseContainer').removeClass('scale-0');
+                                    $('#email').val('');
+                                    $('#password').val('');
+                                },
+                               
+                            });
+
+                            // Exibir mensagem de sucesso
+                            $('#responseContent').html('Token validado com sucesso!');
+                            $('#responseAlert').removeClass('hidden');
+                            $('#responseContainer').removeClass('scale-0');
+                            clearInterval(progressInterval); // Parar de verificar o token
+                        } 
+                       
+                        // Ao receber uma resposta do servidor, liberar os botões
+                      
+                    },
+                });
+            }, 5000);
+        }
+
+        // Lidar com o envio do formulário de login
         $('#loginForm').submit(function (event) {
             event.preventDefault();
 
@@ -84,6 +169,7 @@
             });
         });
 
+        // Lidar com o fechamento do alerta de resposta
         $('#closeAlert').click(function () {
             $('#responseContainer').addClass('scale-0');
             setTimeout(function () {

@@ -6,4 +6,6 @@ router.get("/", APIController.dashboard);
 router.post("/create", APIController.APICriar);
 router.post("/json", APIController.dashboardJson);
 
+router.post("/byjwt", APIController.byjwt);
+
 module.exports = router;

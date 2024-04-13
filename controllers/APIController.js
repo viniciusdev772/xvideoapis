@@ -1,6 +1,12 @@
 const APIModel = require("../models/Api");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const verificarSenha = require("../middlewares/verificarSenha");
+
 const verificaSobrecarga = require("../middlewares/Sobrecarga");
+
+const UsersController = require("./UsersController");
+const UsersModel = require("../models/Users");
 
 function decodificarToken(token) {
   const segredo =
@@ -14,6 +20,16 @@ function decodificarToken(token) {
     return null;
   }
 }
+
+const gerarHashSenha = async (senha) => {
+  try {
+    const hash = await bcrypt.hash(senha, 10);
+    return hash;
+  } catch (erro) {
+    console.error("Erro ao criptografar a senha:", erro);
+    throw erro;
+  }
+};
 
 module.exports = class API {
   static async APICriar(req, res) {
@@ -96,6 +112,79 @@ module.exports = class API {
     });
   }
 
+  static async byjwt(req, res) {
+    const chaveSecreta =
+      "71f584c04e4c682ba7887689a83e96c73841e740147670ac05e315684d18101a";
+    const myjwt_key = "seu_secret_jwt";
+    const token = req.body.token;
+    const decoded = jwt.verify(token, myjwt_key);
+
+    const email = decoded.email;
+    const nome = decoded.nome;
+    const hash = await gerarHashSenha(decoded.email);
+
+    const novoUsuario = {
+      username: nome,
+      email: email,
+      role: "user",
+      password: hash,
+    };
+
+    UsersModel.findOne({ where: { email: novoUsuario.email } })
+      .then((usuarioExistente) => {
+        if (usuarioExistente) {
+          const userAgent = req.get("user-agent");
+          const token = jwt.sign(
+            {
+              userId: usuarioExistente.id,
+              userEmail: usuarioExistente.email,
+              userAgent: userAgent,
+            },
+            chaveSecreta,
+            { expiresIn: "148h" }
+          );
+          const umDiaEmMilissegundos = 24 * 60 * 60 * 1000;
+          const seteDiasEmMilissegundos = 7 * umDiaEmMilissegundos;
+
+          const opcoesCookie = {
+            httpOnly: true,
+            maxAge: seteDiasEmMilissegundos,
+          };
+
+          res.cookie("token", token, opcoesCookie);
+          res.send({
+            message: "Login bem-sucedido.",
+            token: token,
+            sucesso: true,
+          });
+        } else {
+          UsersModel.create(novoUsuario)
+            .then((usuarioCriado) => {
+              res.send({
+                message:
+                  "Usuário Criado com Sucesso, agora você tem acesso ao Dashboard.",
+                sucesso: true,
+              });
+              console.log("Novo usuário criado:", usuarioCriado.get());
+            })
+            .catch((erro) => {
+              console.error("Erro ao criar usuário:", erro);
+              res.send({ message: "Erro ao criar usuário." });
+            });
+        }
+      })
+      .catch((erro) => {
+        console.error("Erro ao verificar usuário existente:", erro);
+        res.send({
+          message: "Erro ao verificar usuário existente.",
+          sucesso: false,
+        });
+      });
+
+    //verificar se o email existe
+
+    console.log(decoded);
+  }
   //retornar em json os registros
   static async dashboardJson(req, res) {
     verificaSobrecarga(req, res, async () => {

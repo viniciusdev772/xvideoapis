@@ -57,6 +57,11 @@ module.exports = class Users {
             sucesso: false,
           });
         });
+
+
+
+
+        
     });
   }
   static Login(req, res) {
@@ -93,7 +98,7 @@ module.exports = class Users {
               userAgent: userAgent,
             },
             chaveSecreta,
-            { expiresIn: "12h" }
+            { expiresIn: "148h" }
           );
 
           res.cookie("token", token, { httpOnly: true, maxAge: 3600000 });
