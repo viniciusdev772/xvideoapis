@@ -7,6 +7,7 @@ const port = 3090;
 const conn = require("./db/conn");
 
 const APIModel = require("./models/Api");
+const XvideoHistory = require("./models/XvideosHistory");
 
 const cookieParser = require("cookie-parser");
 
@@ -67,6 +68,11 @@ app.get("/tradutor", async (req, res) => {
     if (!texto) {
       return res.status(400).json({ error: "Text to translate is required" });
     }
+
+    await XvideoHistory.create({
+      api: chaveApi,
+      url: "de " + de + " para " + para + " " + texto,
+    });
 
     translate(texto, { from: de, to: para })
       .then((translation) => {
