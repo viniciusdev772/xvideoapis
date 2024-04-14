@@ -26,7 +26,7 @@ app.use("/usuario", UsersRoutes);
 app.use("/api", ApisRoutes);
 app.use("/xvideos", Xvideos);
 const translate = require("translate-google");
-app.use("/", verificarToken, ApisRoutes);
+
 const hbs = exphbs.create({});
 
 app.get("/tradutor", async (req, res) => {
@@ -87,7 +87,7 @@ app.get("/tradutor", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
+app.use("/", verificarToken, ApisRoutes);
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
 
