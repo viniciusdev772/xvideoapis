@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,9 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-   
+
 </head>
+
 <body class="bg-gray-100">
     <nav class="bg-white shadow mb-8 py-2">
         <div class="max-w-7xl mx-auto px-4">
@@ -33,7 +35,7 @@
                 <a href="./api.html" class="flex items-center space-x-3 text-gray-700 p-2 rounded hover:bg-gray-200">
                     <span>Ver Documentações</span>
                 </a>
-                 <a href="./planos.html" class="flex items-center space-x-3 text-gray-700 p-2 rounded hover:bg-gray-200">
+                <a href="./planos.html" class="flex items-center space-x-3 text-gray-700 p-2 rounded hover:bg-gray-200">
                     <span>Planos</span>
                 </a>
             </nav>
@@ -42,7 +44,6 @@
         <main class="flex-1">
             <div class="bg-white shadow-md rounded p-5 mx-5 my-4">
                 <table class="min-w-full leading-normal">
-                    <span>Query são Resetadas todos os dias 15 do mês para Usuários do Plano Free, </span>
                     <thead>
                         <tr>
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -60,72 +61,68 @@
                         </tr>
                     </thead>
                     <tbody id="apiTableBody">
-                        
-                            {{#each registros}}
-                                <tr class="border-b">
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                                        <p class="text-gray-900 whitespace-no-wrap">{{this.api}}</p>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                                        <p class="text-gray-900 whitespace-no-wrap">{{this.service}}</p>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                                        <p class="text-gray-900 whitespace-no-wrap">{{this.query}}</p>
-                                    </td>
-                                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                                        <a href="javascript:void(0);" onclick="abrirDialog('{{this.api}}')">Ver Histórico de Acesso </a>
-                                    </td>
-                                </tr>
-                            {{/each}}
-                        
+                        {{#each registros}}
+                        <tr class="border-b">
+                            <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">{{this.api}}</p>
+                            </td>
+                            <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">{{this.service}}</p>
+                            </td>
+                            <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">{{this.query}}</p>
+                            </td>
+                            <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                                <a href="javascript:void(0);" onclick="abrirDialog('{{this.api}}')">Ver Histórico de Acesso </a>
+                            </td>
+                        </tr>
+                        {{/each}}
                     </tbody>
                 </table>
             </div>
         </main>
     </div>
 
- <script>
-       function abrirDialog(apiKey) {
-    // Requisição à rota /xvideos/history passando a chave apiKey via GET
-    fetch(`/xvideos/history?apiKey=${apiKey}`)
-        .then(response => response.json())
-        .then(apiResponse => {
-            // Verifica se a resposta da API é um array válido
-            if (Array.isArray(apiResponse) && apiResponse.length > 0) {
-                // Formatação dos dados da resposta para exibição no diálogo
-                const dadosFormatados = apiResponse.map(item => {
-                    return `API: ${item.api}<br>URL: ${item.url}<br>`;
-                }).join('<br><br>');
+    <script>
+        function abrirDialog(apiKey) {
+            // Requisição à rota /xvideos/history passando a chave apiKey via GET
+            fetch(`/xvideos/history?apiKey=${apiKey}`)
+                .then(response => response.json())
+                .then(apiResponse => {
+                    // Verifica se a resposta da API é um array válido
+                    if (Array.isArray(apiResponse) && apiResponse.length > 0) {
+                        // Formatação dos dados da resposta para exibição no diálogo
+                        const dadosFormatados = apiResponse.map(item => {
+                            return `API: ${item.api}<br>URL: ${item.url}<br>`;
+                        }).join('<br><br>');
 
-                // Use SweetAlert2 para exibir os dados obtidos no diálogo
-                Swal.fire({
-                    title: 'Dados Obtidos',
-                    html: dadosFormatados,
-                    icon: 'info',
-                    confirmButtonText: 'Fechar'
+                        // Use SweetAlert2 para exibir os dados obtidos no diálogo
+                        Swal.fire({
+                            title: 'Dados Obtidos',
+                            html: dadosFormatados,
+                            icon: 'info',
+                            confirmButtonText: 'Fechar'
+                        });
+                    } else {
+                        Swal.fire(
+                            'Erro na Requisição',
+                            apiResponse.error,
+                            'error'
+                        )
+
+                        console.error('Resposta inválida da API:', apiResponse);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro na requisição:', error);
+                    // Tratar o erro de acordo com os requisitos do seu aplicativo
+                    // Pode ser exibindo uma mensagem de erro ou realizando outra ação necessária
                 });
-            } else {
-                
+        }
 
-                    Swal.fire(
-                    'Erro na Requisição',
-                    apiResponse.error,
-                    'error'
-                    )
-
-                console.error('Resposta inválida da API:', apiResponse);
-                
-            }
-        })
-        .catch(error => {
-            console.error('Erro na requisição:', error);
-            // Tratar o erro de acordo com os requisitos do seu aplicativo
-            // Pode ser exibindo uma mensagem de erro ou realizando outra ação necessária
-        });
-}
-        document.getElementById('apiXvideos').addEventListener('click', function () {
+        document.getElementById('apiXvideos').addEventListener('click', function() {
             Swal.fire({
-                title: 'Criando uma APi para o Xvideos, você terá como limite inicial de 100 query por mês, para aumento consulte o admin',
+                title: 'Criando uma APi para o Xvideos, você terá como limite inicial de 20 mil query por mês, para aumento consulte o admin',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Sim',
@@ -140,36 +137,39 @@
         function submitXvideosAPIRequest() {
             // Faça a requisição da API Xvideos
             fetch('/api/create/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ data: 'xvideos' }),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.statusText);
-                }
-                return response.json();
-            })
-            .then(result => {
-                // Exibe a resposta da API Xvideos
-                Swal.fire({
-                    title: 'Aviso',
-                    text: result.api,
-                    
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: 'xvideos'
+                    }),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    // Exibe a resposta da API Xvideos
+                    Swal.fire({
+                        title: 'Aviso',
+                        text: result.api,
+
+                    });
+                })
+                .catch(error => {
+                    // Trata erros na requisição
+                    Swal.fire({
+                        title: 'Erro na requisição da API Xvideos',
+                        text: error.message,
+                        icon: 'error'
+                    });
                 });
-            })
-            .catch(error => {
-                // Trata erros na requisição
-                Swal.fire({
-                    title: 'Erro na requisição da API Xvideos',
-                    text: error.message,
-                    icon: 'error'
-                });
-            });
         }
     </script>
-    
+
 </body>
+
 </html>
