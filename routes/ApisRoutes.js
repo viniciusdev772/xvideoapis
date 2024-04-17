@@ -7,7 +7,8 @@ router.post("/create", APIController.APICriar);
 router.post("/json", APIController.dashboardJson);
 
 router.get("/myip", async (req, res) => {
-  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const ipAddr = req.headers["x-forwarded-for"];
+  const ip = ipAddr ? ipAddr.split(",").pop() : req.socket.remoteAddress;
   res.send(ip);
 });
 
